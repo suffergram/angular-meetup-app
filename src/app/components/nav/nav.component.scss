@@ -1,0 +1,25 @@
+:host {
+  height: 100%;
+  flex: 1;
+}
+
+.nav-ul {
+  list-style-type: none;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 0;
+  padding: 0;
+  height: 100%;
+
+  .nav-li {
+    padding: 7px;
+    cursor: pointer;
+    border: 2px solid transparent;
+    color: var(--bold-color);
+
+    &:hover {
+      border-bottom: 2px solid var(--accent-color);
+    }
+  }
+}

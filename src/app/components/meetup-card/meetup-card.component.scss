@@ -1,0 +1,148 @@
+.meetup {
+  background-color: var(--default-color);
+  border: 1px solid var(--border-color);
+  padding: 14px 18px;
+  box-sizing: border-box;
+  display: flex;
+  gap: 10px;
+
+  .meetup-title {
+    margin: 0;
+    font-size: 24px;
+    line-height: 24px;
+    color: var(--bold-color);
+  }
+
+  .meetup-info {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+
+    .meetup-header {
+      display: flex;
+      align-items: flex-end;
+      gap: 10px;
+
+      .meetup-subs {
+        color: var(--accent-color);
+        font-size: 18px;
+        line-height: 18px;
+        margin: 0;
+      }
+    }
+
+    .meetup-main {
+      flex: 1;
+      min-height: 93px;
+
+      .meetup-short {
+        margin-top: 14px;
+        font-size: 18px;
+        color: var(--primary-color);
+      }
+
+      .meetup-long {
+        margin: 14px 0 18px;
+        font-size: 18px;
+        color: var(--primary-color);
+
+        p {
+          margin: 0;
+        }
+
+        .heading {
+          margin: 0;
+          margin-top: 19px;
+          margin-bottom: 4px;
+          color: var(--bold-color);
+        }
+
+        .paragraph {
+          padding-left: 11px;
+        }
+      }
+    }
+
+    .meetup-footer {
+      display: flex;
+      gap: 10px;
+
+      .meetup-user {
+        width: 25px;
+        aspect-ratio: 1 / 1;
+      }
+
+      .meetup-owner {
+        margin: 0;
+      }
+    }
+  }
+
+  .meetup-tools {
+    display: flex;
+    flex-direction: column;
+
+    .meetup-location {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      width: 241px;
+
+      .meetup-place {
+        font-size: 14px;
+        margin: 0;
+        margin-top: 5px;
+      }
+    }
+
+    .meetup-controls {
+      display: flex;
+      gap: 11px;
+
+      .meetup-sub {
+        border: none;
+        border-radius: 5px;
+        width: 160px;
+        height: 50px;
+        background-color: var(--secondary-color);
+        color: var(--bold-color);
+        cursor: pointer;
+        font-size: 18px;
+      }
+
+      .meetup-unsub {
+        border: none;
+        border-radius: 5px;
+        width: 160px;
+        height: 50px;
+        background-color: var(--primary-color);
+        color: var(--secondary-color);
+        cursor: pointer;
+        font-size: 18px;
+      }
+
+      .meetup-toggle {
+        border: none;
+        border-radius: 5px;
+        width: 70px;
+        height: 50px;
+        background-color: var(--accent-color);
+        cursor: pointer;
+        padding: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        img {
+          width: 29px;
+          height: 23px;
+        }
+
+        .opened {
+          transform: rotate(180deg);
+        }
+      }
+    }
+  }
+}

@@ -1,1 +1,37 @@
-/* You can add global styles to this file, and also import other style files */
+body {
+  @font-face {
+    font-family: "OpenSans";
+    font-style: normal;
+    font-weight: normal;
+    src: url("assets/fonts/OpenSans-Regular.ttf") format("truetype");
+    font-display: swap;
+  }
+
+  @font-face {
+    font-family: "OpenSans";
+    font-style: normal;
+    font-weight: bold;
+    src: url("assets/fonts/OpenSans_Condensed-Bold.ttf") format("truetype");
+    font-display: swap;
+  }
+
+  margin: 0;
+  padding: 0;
+  background-color: var(--background-color);
+  color: var(--white-color);
+  font-family: "OpenSans";
+  min-height: 100vh;
+  display: flex;
+
+  --white-color: #ffffff;
+  --background-color: #1e1e1e;
+  --bold-color: #e9e9e9;
+  --default-color: #2c2c2c;
+  --primary-color: #b4b4c0;
+  --info-color: #008697;
+  --secondary-color: #4c3f78;
+  --accent-color: #b85526;
+
+  --border-color: rgba(180, 180, 192, 0.3);
+  --error-color: #da0000;
+}
