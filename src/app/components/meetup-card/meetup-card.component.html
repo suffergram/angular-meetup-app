@@ -1,0 +1,102 @@
+<div class="meetup">
+  <div class="meetup-info">
+    <header class="meetup-header">
+      <h3 class="meetup-title">{{ meetup.name }}</h3>
+      <p class="meetup-subs">{{ meetup.users.length }} {{ subs }}</p>
+    </header>
+    <main class="meetup-main">
+      <div *ngIf="this.opened; else closedDiscription" class="meetup-long">
+        <p>{{ meetup.description }}</p>
+        <h4 class="heading" *ngIf="meetup.duration">Продолжительность</h4>
+        <p class="paragraph" *ngIf="meetup.duration">
+          {{ meetup.duration }} {{ this.minutes }}
+        </p>
+        <h4 class="heading" *ngIf="meetup.target_audience">
+          Целевая аудитория
+        </h4>
+        <p class="paragraph" *ngIf="meetup.target_audience">
+          {{ meetup.target_audience }}
+        </p>
+        <h4 class="heading" *ngIf="meetup.need_to_know">Что нужно знать?</h4>
+        <p class="paragraph" *ngIf="meetup.need_to_know">
+          {{ meetup.need_to_know }}
+        </p>
+        <h4 class="heading" *ngIf="meetup.will_happen">Что будет?</h4>
+        <p class="paragraph" *ngIf="meetup.will_happen">
+          {{ meetup.will_happen }}
+        </p>
+        <h4 class="heading" *ngIf="meetup.reason_to_come">
+          Почему надо обязательно прийти?
+        </h4>
+        <p class="paragraph" *ngIf="meetup.reason_to_come">
+          {{ meetup.reason_to_come }}
+        </p>
+      </div>
+      <ng-template #closedDiscription>
+        <p class="meetup-short">{{ meetup.description }}</p>
+      </ng-template>
+    </main>
+    <footer class="meetup-footer">
+      <img class="meetup-user" src="assets/images/user.png" />
+      <p class="meetup-owner">{{ meetup.owner.fio }}</p>
+    </footer>
+  </div>
+  <div class="meetup-tools">
+    <div class="meetup-location">
+      <h3 class="meetup-title">{{ date }}</h3>
+      <p class="meetup-place">{{ meetup.location }}</p>
+    </div>
+    <div class="meetup-controls">
+      <button
+        class="meetup-sub"
+        *ngIf="
+          currentUser && meetup.createdBy === this.currentUser.id;
+          else subBlock
+        "
+      >
+        Редактировать
+      </button>
+
+      <ng-template #subBlock>
+        <button
+          class="meetup-sub"
+          (click)="onSubscribe()"
+          *ngIf="
+            currentUser && !meetupUsers.includes(currentUser.id);
+            else unsubBlock
+          "
+        >
+          Я пойду!
+        </button>
+
+        <ng-template #unsubBlock>
+          <button class="meetup-unsub" (click)="onUnsubscribe()">
+            Не смогу пойти
+          </button>
+        </ng-template>
+      </ng-template>
+
+      <button class="meetup-toggle" (click)="onToggle()">
+        <img
+          src="assets/images/arrow.png"
+          class="opened"
+          *ngIf="this.opened; else closedImg"
+        />
+        <ng-template #closedImg>
+          <img src="assets/images/arrow.png" />
+        </ng-template>
+      </button>
+      <button
+        class="meetup-delete"
+        (click)="onDeleteMeetup()"
+        *ngIf="
+          currentUser &&
+          (meetup.createdBy === this.currentUser.id ||
+            currentUser.roles[0].name === UserRole.Admin)
+        "
+      >
+        <img src="assets/images/cross.png" />
+      </button>
+    </div>
+  </div>
+</div>

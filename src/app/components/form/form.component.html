@@ -1,0 +1,105 @@
+<div class="modal">
+  <button (click)="handleCloseModal.emit()" class="modal-close">╳</button>
+
+  <form class="modal-form" [formGroup]="modalForm">
+    <p class="modal-title">{{ title }}</p>
+
+    <div class="modal-main">
+      <label for="title" class="main-label">Название:</label>
+      <input
+        id="title"
+        class="main-input"
+        type="text"
+        placeholder="Название митапа"
+        formControlName="title"
+      />
+      <label for="date" class="main-label">Дата:</label>
+      <div class="main-datetime">
+        <input
+          id="date"
+          class="main-input"
+          type="date"
+          formControlName="date"
+        />
+        <label for="time" class="main-label">Время:</label>
+        <input
+          id="time"
+          class="main-input"
+          type="time"
+          formControlName="time"
+        />
+      </div>
+      <label for="location" class="main-label">Место:</label>
+      <input
+        id="location"
+        class="main-input"
+        type="text"
+        placeholder="Место проведения"
+        formControlName="location"
+      />
+      <label for="duration" class="main-label">Продолжительность:</label>
+      <input
+        id="duration"
+        class="main-input"
+        type="number"
+        min="0"
+        max="600"
+        placeholder="Продолжительность в минутах"
+        formControlName="duration"
+      />
+      <label for="description" class="main-label">Описание:</label>
+      <textarea
+        id="description"
+        class="main-textarea"
+        placeholder="Описание митапа"
+        formControlName="description"
+      ></textarea>
+      <label for="target" class="main-label">Целевая аудитория:</label>
+      <textarea
+        id="target"
+        class="main-textarea"
+        placeholder="Разработчики, аналитики и т.д."
+        formControlName="target"
+      ></textarea>
+      <label for="req" class="main-label">Что надо знать?</label>
+      <textarea
+        id="req"
+        class="main-textarea"
+        placeholder="Темы, умения, навыки и т.д."
+        formControlName="req"
+      ></textarea>
+      <label for="theme" class="main-label">Что будет?</label>
+      <textarea
+        id="theme"
+        class="main-textarea"
+        placeholder="Список тем, событий или др."
+        formControlName="theme"
+      ></textarea>
+      <label for="reason" class="main-label">
+        Почему надо обязательно прийти?
+      </label>
+      <textarea
+        id="reason"
+        class="main-textarea"
+        placeholder="Причина прийти на митап"
+        formControlName="reason"
+      ></textarea>
+    </div>
+  </form>
+
+  <div class="modal-controls">
+    <button class="modal-reset" type="reset" (click)="handleFormReset()">
+      Удалить
+    </button>
+    <button
+      class="modal-cancel"
+      type="button"
+      (click)="handleCloseModal.emit()"
+    >
+      Отмена
+    </button>
+    <button class="modal-submit" type="submit" (click)="handleFormSubmit()">
+      Сохранить
+    </button>
+  </div>
+</div>

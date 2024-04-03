@@ -1,0 +1,22 @@
+<div class="header-content">
+  <h1 class="header-title">MeetUps</h1>
+  <div class="header-images">
+    <img class="image-1" src="assets/images/image1.png" />
+    <img class="image-2" src="assets/images/image2.png" />
+  </div>
+</div>
+<app-nav></app-nav>
+<div class="header-logout">
+  <button
+    class="logout-button"
+    (click)="onLogout()"
+    *ngIf="this.user; else noUserBlock"
+  >
+    <img src="assets/images/logout.png" />
+  </button>
+  <ng-template #noUserBlock>
+    <button class="logout-button" (click)="onLogin()">
+      <img src="assets/images/user.png" />
+    </button>
+  </ng-template>
+</div>

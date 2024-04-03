@@ -1,0 +1,51 @@
+:host {
+  flex: 1;
+  padding: 20px 40px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.meetup-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  .meetup-ul {
+    align-self: stretch;
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+}
+
+.meetup-create {
+  align-self: flex-end;
+  width: 160px;
+  height: 46px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 18px;
+  background-color: var(--info-color);
+  color: var(--bold-color);
+}
+
+.admin-content {
+  display: flex;
+  justify-content: center;
+
+  .users-ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    width: 800px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+}

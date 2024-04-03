@@ -1,0 +1,18 @@
+<form [formGroup]="form" (submit)="onSubmit()" class="login-form">
+  <input
+    type="text"
+    placeholder="E-mail"
+    class="login-input"
+    formControlName="email"
+  />
+  <input
+    type="password"
+    placeholder="Password"
+    class="login-input"
+    formControlName="password"
+  />
+  <div class="login-links">
+    <a routerLink="/instruction" class="login-howto">How to create account?</a>
+    <button class="login-submit" type="submit">Log In</button>
+  </div>
+</form>
