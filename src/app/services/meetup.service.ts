@@ -3,14 +3,16 @@ import { Injectable } from '@angular/core';
 import { environment } from '../../environments/environment';
 import { Meetup } from '../interfaces/meetup';
 import { SubInfo } from '../interfaces/sub-info';
+import { AuthService } from './auth.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class MeetupService {
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient, private authService: AuthService) {}
 
   public meetups: Meetup[] = [];
+  public userMeetups: boolean = false;
 
   baseUrl: string = `${environment.backendOrigin}/meetup`;
 
@@ -23,11 +25,20 @@ export class MeetupService {
   }
 
   getMeetups(): Meetup[] {
+    if (this.userMeetups) return this.filterMeetups();
     return this.meetups;
   }
 
+  filterMeetups(): Meetup[] {
+    return this.meetups.filter(
+      (meetup: Meetup) =>
+        meetup.users.some((user) => user.id === this.authService.user.id) ||
+        meetup.createdBy === this.authService.user.id
+    );
+  }
+
   updateMeetup(newData: Meetup) {
-    this.meetups = this.getMeetups().map((meetup) => {
+    this.meetups = this.meetups.map((meetup) => {
       if (meetup.id === newData.id)
         return {
           ...meetup,
@@ -43,6 +54,32 @@ export class MeetupService {
 
   unsubscribeUser(data: SubInfo) {
     return this.http.delete(this.baseUrl, { body: data });
+  }
+
+  postMeetup(data: Partial<Meetup>) {
+    return this.http.post(this.baseUrl, data);
+  }
+
+  addMeetup(data: Meetup) {
+    this.meetups = [
+      ...this.meetups,
+      {
+        ...data,
+        createdBy: this.authService.user.id,
+        users: [],
+        owner: {
+          ...this.authService.user,
+        },
+      },
+    ];
+  }
+
+  deleteMeetup(id: number) {
+    return this.http.delete(`${this.baseUrl}/${id}`);
+  }
+
+  removeMeetup(id: number) {
+    this.meetups = this.meetups.filter((meetup) => meetup.id !== id);
   }
 
   plural(

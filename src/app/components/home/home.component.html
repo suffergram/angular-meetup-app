@@ -1,5 +1,20 @@
-<ul class="meetup-ul">
-  <li class="meetup-li" *ngFor="let meetup of meetups">
-    <app-meetup-card [meetup]="meetup"></app-meetup-card>
-  </li>
-</ul>
+<section class="meetup-content">
+  <ul class="meetup-ul" *ngIf="!isModalOpen; else modalBlock">
+    <li class="meetup-li" *ngFor="let meetup of meetups">
+      <app-meetup-card [meetup]="meetup"></app-meetup-card>
+    </li>
+  </ul>
+  <ng-template #modalBlock>
+    <app-modal
+      [title]="modalTitle"
+      (handleCloseModal)="handleCloseModal()"
+    ></app-modal>
+  </ng-template>
+</section>
+<button
+  class="meetup-create"
+  *ngIf="!isModalOpen"
+  (click)="handleOpenModal(ModalTitle.Create)"
+>
+  Создать митап
+</button>

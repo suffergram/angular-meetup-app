@@ -81,6 +81,7 @@
   .meetup-tools {
     display: flex;
     flex-direction: column;
+    position: relative;
 
     .meetup-location {
       flex: 1;
@@ -141,6 +142,24 @@
 
         .opened {
           transform: rotate(180deg);
+        }
+      }
+
+      .meetup-delete {
+        position: absolute;
+        top: 0;
+        right: 0;
+        width: 24px;
+        height: 24px;
+        padding: 4px;
+        border: 1px solid var(--accent-color);
+        border-radius: 5px;
+        background-color: transparent;
+        cursor: pointer;
+
+        img {
+          width: 14px;
+          height: 14px;
         }
       }
     }

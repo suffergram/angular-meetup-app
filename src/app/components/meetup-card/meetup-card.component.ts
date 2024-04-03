@@ -20,14 +20,15 @@ export class MeetupCardComponent implements OnInit {
   ) {}
 
   @Input()
-  meetup!: Meetup;
+  public meetup!: Meetup;
 
-  subs: string = '';
-  date: string = '';
+  public subs: string = '';
+  public date: string = '';
+  public minutes: string = '';
 
-  currentUser: User | null = null;
+  public currentUser: User | null = null;
 
-  meetupUsers: Array<number> = [];
+  public meetupUsers: Array<number> = [];
 
   public opened: boolean = false;
 
@@ -36,6 +37,11 @@ export class MeetupCardComponent implements OnInit {
       one: 'подписчик',
       few: 'подписчика',
       many: 'подписчиков',
+    });
+    this.minutes = this.meetupService.plural(this.meetup.duration, {
+      one: 'минута',
+      few: 'минут',
+      many: 'минут',
     });
     this.date = this.meetupService.dateFormat(this.meetup?.time);
     this.currentUser = this.authService.user;
@@ -68,5 +74,12 @@ export class MeetupCardComponent implements OnInit {
         this.meetupService.updateMeetup(data as Meetup);
       });
     }
+  }
+
+  onDeleteMeetup() {
+    console.log('deleting', this.meetup.id);
+    this.meetupService.deleteMeetup(this.meetup.id).subscribe(() => {
+      this.meetupService.removeMeetup(this.meetup.id);
+    });
   }
 }

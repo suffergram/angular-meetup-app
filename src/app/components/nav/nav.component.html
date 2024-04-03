@@ -1,4 +1,18 @@
 <ul class="nav-ul">
-  <li class="nav-li">Все митапы</li>
-  <li class="nav-li">Мои митапы</li>
+  <li class="nav-li">
+    <button
+      [class]="['nav-button', this.meetupService.userMeetups ? '' : 'active']"
+      (click)="handleAllMeetups()"
+    >
+      Все митапы
+    </button>
+  </li>
+  <li class="nav-li">
+    <button
+      [class]="['nav-button', this.meetupService.userMeetups ? 'active' : '']"
+      (click)="handleUserMeetups()"
+    >
+      Мои митапы
+    </button>
+  </li>
 </ul>

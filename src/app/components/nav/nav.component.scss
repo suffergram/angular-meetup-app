@@ -7,19 +7,27 @@
   list-style-type: none;
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 34px;
   margin: 0;
   padding: 0;
   height: 100%;
 
   .nav-li {
-    padding: 7px;
-    cursor: pointer;
-    border: 2px solid transparent;
-    color: var(--bold-color);
+    border-bottom: 10px solid transparent;
+    border-top: 10px solid transparent;
+    padding: 7px 0;
 
-    &:hover {
-      border-bottom: 2px solid var(--accent-color);
+    &:has(> .nav-button:hover, .active) {
+      border-bottom: 10px solid var(--accent-color);
+    }
+
+    .nav-button {
+      cursor: pointer;
+      color: var(--bold-color);
+      border: none;
+      background-color: transparent;
+      font-size: 24px;
+      padding: 0;
     }
   }
 }
