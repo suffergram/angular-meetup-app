@@ -1,27 +1,41 @@
-import { Component, DoCheck, OnDestroy, OnInit, inject } from '@angular/core';
+import { Component, DoCheck, OnDestroy, OnInit } from '@angular/core';
 import { MeetupService } from '../../services/meetup.service';
 import { Subject, takeUntil } from 'rxjs';
 import { Meetup } from '../../interfaces/meetup';
 import { MeetupCardComponent } from '../meetup-card/meetup-card.component';
 import { NgFor, NgIf } from '@angular/common';
-import { ModalComponent } from '../modal/modal.component';
-import { ModalTitle } from '../../enums/modal-title';
+import { FormComponent } from '../form/form.component';
+import { FormTitle } from '../../enums/form-title';
+import { Router } from '@angular/router';
+import { AuthService } from '../../services/auth.service';
+import { UserRole } from '../../enums/user-role';
+import { UserService } from '../../services/user.service';
+import { User } from '../../interfaces/user';
+import { UserCardComponent } from '../user-card/user-card.component';
 
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [MeetupCardComponent, ModalComponent, NgFor, NgIf],
+  imports: [MeetupCardComponent, FormComponent, UserCardComponent, NgFor, NgIf],
   templateUrl: './home.component.html',
   styleUrl: './home.component.scss',
 })
 export class HomeComponent implements OnInit, OnDestroy, DoCheck {
-  public meetupService = inject(MeetupService);
+  constructor(
+    public meetupService: MeetupService,
+    public router: Router,
+    public authService: AuthService,
+    public userService: UserService
+  ) {}
+
   private _destroyer = new Subject();
   public meetups = [] as Meetup[];
-  public ModalTitle = ModalTitle;
+  public FormTitle = FormTitle;
 
   public isModalOpen: boolean = false;
   public modalTitle: string = '';
+
+  public users = [] as User[];
 
   ngOnInit(): void {
     this.meetupService
@@ -30,8 +44,17 @@ export class HomeComponent implements OnInit, OnDestroy, DoCheck {
       .subscribe((data: Object) => {
         this.meetupService.setMeetups(data as Meetup[]);
         this.meetups = this.meetupService.getMeetups();
-        console.log(this.meetups);
       });
+
+    if (this.authService.user.roles[0].name === UserRole.Admin) {
+      this.userService
+        .fetchUsers()
+        .pipe(takeUntil(this._destroyer))
+        .subscribe((data: Object) => {
+          this.userService.setUsers(data as User[]);
+          this.users = this.userService.getUsers();
+        });
+    }
   }
 
   ngDoCheck(): void {

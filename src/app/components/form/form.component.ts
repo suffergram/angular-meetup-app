@@ -1,11 +1,4 @@
-import {
-  Component,
-  DoCheck,
-  EventEmitter,
-  Input,
-  OnInit,
-  Output,
-} from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import {
   FormBuilder,
   FormControl,
@@ -17,13 +10,13 @@ import { MeetupService } from '../../services/meetup.service';
 import { Meetup } from '../../interfaces/meetup';
 
 @Component({
-  selector: 'app-modal',
+  selector: 'app-form',
   standalone: true,
   imports: [ReactiveFormsModule],
-  templateUrl: './modal.component.html',
-  styleUrl: './modal.component.scss',
+  templateUrl: './form.component.html',
+  styleUrl: './form.component.scss',
 })
-export class ModalComponent implements OnInit {
+export class FormComponent implements OnInit {
   constructor(
     private formBuilder: FormBuilder,
     private meetupService: MeetupService

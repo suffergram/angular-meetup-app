@@ -92,7 +92,7 @@
         *ngIf="
           currentUser &&
           (meetup.createdBy === this.currentUser.id ||
-            currentUser.roles[0].name === 'ADMIN')
+            currentUser.roles[0].name === UserRole.Admin)
         "
       >
         <img src="assets/images/cross.png" />

@@ -5,6 +5,7 @@ import { NgIf } from '@angular/common';
 import { AuthService } from '../../services/auth.service';
 import { SubInfo } from '../../interfaces/sub-info';
 import { User } from '../../interfaces/user';
+import { UserRole } from '../../enums/user-role';
 
 @Component({
   selector: 'app-meetup-card',
@@ -25,12 +26,10 @@ export class MeetupCardComponent implements OnInit {
   public subs: string = '';
   public date: string = '';
   public minutes: string = '';
-
   public currentUser: User | null = null;
-
   public meetupUsers: Array<number> = [];
-
   public opened: boolean = false;
+  public UserRole = UserRole;
 
   ngOnInit(): void {
     this.subs = this.meetupService.plural(this.meetup.users.length, {
@@ -40,7 +39,7 @@ export class MeetupCardComponent implements OnInit {
     });
     this.minutes = this.meetupService.plural(this.meetup.duration, {
       one: 'минута',
-      few: 'минут',
+      few: 'минуты',
       many: 'минут',
     });
     this.date = this.meetupService.dateFormat(this.meetup?.time);
@@ -77,7 +76,6 @@ export class MeetupCardComponent implements OnInit {
   }
 
   onDeleteMeetup() {
-    console.log('deleting', this.meetup.id);
     this.meetupService.deleteMeetup(this.meetup.id).subscribe(() => {
       this.meetupService.removeMeetup(this.meetup.id);
     });

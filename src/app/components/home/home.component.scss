@@ -34,3 +34,18 @@
   background-color: var(--info-color);
   color: var(--bold-color);
 }
+
+.admin-content {
+  display: flex;
+  justify-content: center;
+
+  .users-ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    width: 800px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+}

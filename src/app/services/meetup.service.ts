@@ -4,15 +4,19 @@ import { environment } from '../../environments/environment';
 import { Meetup } from '../interfaces/meetup';
 import { SubInfo } from '../interfaces/sub-info';
 import { AuthService } from './auth.service';
+import { Router } from '@angular/router';
 
 @Injectable({
   providedIn: 'root',
 })
 export class MeetupService {
-  constructor(private http: HttpClient, private authService: AuthService) {}
+  constructor(
+    private http: HttpClient,
+    private authService: AuthService,
+    private router: Router
+  ) {}
 
   public meetups: Meetup[] = [];
-  public userMeetups: boolean = false;
 
   baseUrl: string = `${environment.backendOrigin}/meetup`;
 
@@ -25,8 +29,12 @@ export class MeetupService {
   }
 
   getMeetups(): Meetup[] {
-    if (this.userMeetups) return this.filterMeetups();
-    return this.meetups;
+    switch (this.router.url) {
+      case '/my':
+        return this.filterMeetups();
+      default:
+        return this.meetups;
+    }
   }
 
   filterMeetups(): Meetup[] {

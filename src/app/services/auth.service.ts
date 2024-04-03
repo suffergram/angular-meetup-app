@@ -33,7 +33,8 @@ export class AuthService {
 
   logout() {
     localStorage.removeItem(this.tokenName);
-    if (this.location.path() === '') this.routes.navigate(['login']);
+    if (['', '/my', '/users'].includes(this.location.path()))
+      this.routes.navigate(['login']);
   }
 
   get user() {

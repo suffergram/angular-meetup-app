@@ -1,20 +1,32 @@
-<section class="meetup-content">
+<section
+  class="meetup-content"
+  *ngIf="['/', '/my'].includes(this.router.url); else adminRoute"
+>
   <ul class="meetup-ul" *ngIf="!isModalOpen; else modalBlock">
     <li class="meetup-li" *ngFor="let meetup of meetups">
       <app-meetup-card [meetup]="meetup"></app-meetup-card>
     </li>
   </ul>
   <ng-template #modalBlock>
-    <app-modal
+    <app-form
       [title]="modalTitle"
       (handleCloseModal)="handleCloseModal()"
-    ></app-modal>
+    ></app-form>
   </ng-template>
 </section>
 <button
   class="meetup-create"
-  *ngIf="!isModalOpen"
-  (click)="handleOpenModal(ModalTitle.Create)"
+  *ngIf="!isModalOpen && ['/', '/my'].includes(this.router.url)"
+  (click)="handleOpenModal(FormTitle.Create)"
 >
   Создать митап
 </button>
+<ng-template #adminRoute>
+  <section class="admin-content">
+    <ul class="users-ul">
+      <li *ngFor="let user of users">
+        <app-user-card [user]="user"></app-user-card>
+      </li>
+    </ul>
+  </section>
+</ng-template>
