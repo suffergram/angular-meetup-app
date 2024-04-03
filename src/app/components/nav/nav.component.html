@@ -1,0 +1,29 @@
+<ul class="nav-ul" *ngIf="this.authService.user">
+  <li class="nav-li">
+    <button
+      [class]="['nav-button', this.router.url === '/' ? 'active' : '']"
+      (click)="handleAllMeetups()"
+    >
+      Все митапы
+    </button>
+  </li>
+  <li class="nav-li">
+    <button
+      [class]="['nav-button', this.router.url === '/my' ? 'active' : '']"
+      (click)="handleUserMeetups()"
+    >
+      Мои митапы
+    </button>
+  </li>
+  <li
+    class="nav-li"
+    *ngIf="this.authService.user.roles[0].name === UserRole.Admin"
+  >
+    <button
+      [class]="['nav-button', this.router.url === '/users' ? 'active' : '']"
+      (click)="handleUsers()"
+    >
+      Пользователи
+    </button>
+  </li>
+</ul>

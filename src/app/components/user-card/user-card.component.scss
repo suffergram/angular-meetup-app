@@ -1,0 +1,73 @@
+p {
+  margin: 0;
+}
+
+.user-container {
+  height: 60px;
+  background-color: var(--default-color);
+  border: 1px solid var(--border-color);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 15px;
+
+  .id {
+    width: 40px;
+  }
+
+  .email,
+  .fio {
+    width: 250px;
+    text-align: center;
+    font-size: 18px;
+    color: var(--bold-color);
+    background-color: transparent;
+    border: 2px solid var(--secondary-color);
+    padding: 10px 0;
+    border-radius: 5px;
+  }
+
+  .role {
+    padding: 10px 0;
+    background-color: var(--default-color);
+    border: 2px solid var(--secondary-color);
+    color: var(--bold-color);
+    font-size: 18px;
+    border-radius: 5px;
+    width: 80px;
+
+    &:disabled {
+      color: var(--bold-color);
+    }
+  }
+
+  .disabled {
+    border-color: transparent;
+
+    &:focus {
+      outline: none;
+    }
+  }
+
+  .user-controls {
+    display: flex;
+    gap: 5px;
+
+    .user-delete,
+    .user-edit {
+      border: 1px solid var(--accent-color);
+      background-color: transparent;
+      padding: 5px;
+      width: 26px;
+      height: 26px;
+      box-sizing: content-box;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    img {
+      width: 26px;
+      height: 26px;
+    }
+  }
+}

@@ -1,0 +1,33 @@
+:host {
+  height: 100%;
+  flex: 1;
+}
+
+.nav-ul {
+  list-style-type: none;
+  display: flex;
+  align-items: center;
+  gap: 34px;
+  margin: 0;
+  padding: 0;
+  height: 100%;
+
+  .nav-li {
+    border-bottom: 10px solid transparent;
+    border-top: 10px solid transparent;
+    padding: 7px 0;
+
+    &:has(> .nav-button:hover, .active) {
+      border-bottom: 10px solid var(--accent-color);
+    }
+
+    .nav-button {
+      cursor: pointer;
+      color: var(--bold-color);
+      border: none;
+      background-color: transparent;
+      font-size: 24px;
+      padding: 0;
+    }
+  }
+}

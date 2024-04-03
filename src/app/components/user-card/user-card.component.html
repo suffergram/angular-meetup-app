@@ -1,0 +1,17 @@
+<form class="user-container" [formGroup]="userForm" (submit)="handleSubmit()">
+  <p class="id">{{ user["id"] }}</p>
+  <input [class]="['email', disabled && 'disabled']" formControlName="email" />
+  <input [class]="['fio', disabled ? 'disabled' : '']" formControlName="fio" />
+  <select [class]="['role', disabled ? 'disabled' : '']" formControlName="role">
+    <option [value]="UserRole.Admin">admin</option>
+    <option [value]="UserRole.User">user</option>
+  </select>
+  <div class="user-controls">
+    <button class="user-delete">
+      <img src="assets/images/cross.png" />
+    </button>
+    <button type="submit" class="user-edit">
+      <img src="assets/images/pen.png" />
+    </button>
+  </div>
+</form>
