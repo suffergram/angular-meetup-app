@@ -1,4 +1,4 @@
-<div class="meetup">
+<div [class]="['meetup', !isActual && 'over']">
   <div class="meetup-info">
     <header class="meetup-header">
       <h3 class="meetup-title">{{ meetup.name }}</h3>
@@ -44,7 +44,12 @@
   <div class="meetup-tools">
     <div class="meetup-location">
       <h3 class="meetup-title">{{ date }}</h3>
-      <p class="meetup-place">{{ meetup.location }}</p>
+      <p class="meetup-place" *ngIf="isActual; else overBlock">
+        {{ meetup.location }}
+      </p>
+      <ng-template #overBlock>
+        <p [class]="['meetup-place', 'meetup-over']">Проведено</p>
+      </ng-template>
     </div>
     <div class="meetup-controls">
       <button
@@ -61,7 +66,8 @@
           currentUser &&
             meetup.createdBy === this.currentUser.id &&
             currentUser &&
-            this.currentUser.roles[0].name === UserRole.User;
+            this.currentUser.roles[0].name === UserRole.User &&
+            this.isActual;
           else subBlock
         "
       >
@@ -73,7 +79,7 @@
           class="meetup-sub"
           (click)="onSubscribe()"
           *ngIf="
-            currentUser && !meetupUsers.includes(currentUser.id);
+            currentUser && !meetupUsers.includes(currentUser.id) && isActual;
             else unsubBlock
           "
         >
@@ -81,7 +87,11 @@
         </button>
 
         <ng-template #unsubBlock>
-          <button class="meetup-unsub" (click)="onUnsubscribe()">
+          <button
+            class="meetup-unsub"
+            (click)="onUnsubscribe()"
+            *ngIf="isActual"
+          >
             Не смогу пойти
           </button>
         </ng-template>

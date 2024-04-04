@@ -31,8 +31,10 @@ export class MeetupCardComponent implements OnInit {
   public minutes: string = '';
   public currentUser: User | null = null;
   public meetupUsers: Array<number> = [];
-  public opened: boolean = false;
   public UserRole = UserRole;
+
+  public opened: boolean = false;
+  public isActual: boolean = false;
 
   ngOnInit(): void {
     this.subs = this.meetupService.plural(this.meetup.users.length, {
@@ -48,6 +50,9 @@ export class MeetupCardComponent implements OnInit {
     this.date = this.meetupService.dateFormat(this.meetup?.time);
     this.currentUser = this.authService.user;
     this.meetupUsers = this.meetup.users.map((user) => user.id);
+
+    this.isActual =
+      this.meetup && Date.now() <= new Date(this.meetup.time).valueOf();
   }
 
   onToggle() {

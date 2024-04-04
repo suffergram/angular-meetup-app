@@ -29,15 +29,14 @@ export class HomeComponent implements OnInit, OnDestroy, DoCheck {
   ) {}
 
   private _destroyer = new Subject();
-  public meetups = [] as Meetup[];
   public FormTitle = FormTitle;
+
+  public meetups = [] as Meetup[];
+  public users = [] as User[];
+  public meetup? = {} as Meetup;
 
   public isModalOpen: boolean = false;
   public modalTitle: string = '';
-
-  public users = [] as User[];
-
-  public meetup? = {} as Meetup;
 
   ngOnInit(): void {
     this.meetupService
@@ -76,14 +75,15 @@ export class HomeComponent implements OnInit, OnDestroy, DoCheck {
     this.modalTitle = title;
     this.isModalOpen = true;
     this.meetup = meetup;
-    window.scrollTo({
-      top: 0,
-      behavior: 'smooth',
-    });
+    this.scrollPage();
   }
 
   handleCloseModal() {
     this.isModalOpen = false;
+    this.scrollPage();
+  }
+
+  scrollPage() {
     window.scrollTo({
       top: 0,
       behavior: 'smooth',

@@ -95,11 +95,17 @@
         margin: 0;
         margin-top: 5px;
       }
+
+      .meetup-over {
+        color: var(--accent-color);
+        font-size: 18px;
+      }
     }
 
     .meetup-controls {
       display: flex;
       gap: 11px;
+      justify-content: flex-end;
 
       .meetup-sub {
         border: none;
@@ -164,4 +170,8 @@
       }
     }
   }
+}
+
+.over {
+  opacity: 0.7;
 }

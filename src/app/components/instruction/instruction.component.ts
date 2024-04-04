@@ -1,12 +1,11 @@
 import { Component } from '@angular/core';
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-instruction',
   standalone: true,
-  imports: [],
+  imports: [RouterLink],
   templateUrl: './instruction.component.html',
-  styleUrl: './instruction.component.scss'
+  styleUrl: './instruction.component.scss',
 })
-export class InstructionComponent {
-
-}
+export class InstructionComponent {}

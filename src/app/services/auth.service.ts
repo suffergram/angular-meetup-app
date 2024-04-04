@@ -37,6 +37,23 @@ export class AuthService {
       this.routes.navigate(['login']);
   }
 
+  signup(email: string, password: string, fio: string) {
+    return this.http
+      .post<{ token: string }>(`${this.baseUrl}/registration`, {
+        email,
+        password,
+        fio,
+      })
+      .pipe(
+        map((res) => {
+          if (res.token) {
+            localStorage.setItem(this.tokenName, res.token);
+          }
+          return null;
+        })
+      );
+  }
+
   get user() {
     const userTokenData = this.token?.split('.')[1];
 

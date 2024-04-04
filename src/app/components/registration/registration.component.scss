@@ -1,0 +1,59 @@
+:host {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.login-form {
+  display: flex;
+  flex-direction: column;
+
+  .login-input {
+    width: 342px;
+    height: 50px;
+    border: 1px solid transparent;
+    border-radius: 5px;
+    background-color: var(--default-color);
+    font-size: 18px;
+    padding: 0 13px;
+    box-sizing: border-box;
+    color: var(--bold-color);
+    margin-bottom: 26px;
+
+    &::placeholder {
+      color: var(--primary-color);
+    }
+
+    &:focus {
+      outline: 2px solid var(--primary-color);
+    }
+
+    &.ng-touched.ng-invalid {
+      border: 1px solid var(--error-color);
+    }
+  }
+
+  .login-links {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-top: 37px;
+
+    .login-link {
+      width: 150px;
+      color: var(--info-color);
+    }
+
+    .login-submit {
+      width: 150px;
+      height: 49px;
+      border: none;
+      border-radius: 5px;
+      background-color: var(--secondary-color);
+      color: var(--bold-color);
+      font-size: 18px;
+      cursor: pointer;
+    }
+  }
+}

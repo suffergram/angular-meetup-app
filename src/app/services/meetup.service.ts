@@ -25,7 +25,15 @@ export class MeetupService {
   }
 
   setMeetups(data: Meetup[]) {
-    this.meetups = data;
+    this.meetups = this.sortMeetups(data);
+  }
+
+  sortMeetups(data: Meetup[]) {
+    return data.sort((a: Meetup, b: Meetup) => {
+      const aDate = new Date(a.time).valueOf();
+      const bDate = new Date(b.time).valueOf();
+      return aDate - bDate;
+    });
   }
 
   getMeetups(): Meetup[] {
@@ -69,7 +77,7 @@ export class MeetupService {
   }
 
   addMeetup(data: Meetup) {
-    this.meetups = [
+    this.meetups = this.sortMeetups([
       ...this.meetups,
       {
         ...data,
@@ -79,7 +87,7 @@ export class MeetupService {
           ...this.authService.user,
         },
       },
-    ];
+    ]);
   }
 
   deleteMeetup(id: number) {
@@ -95,14 +103,16 @@ export class MeetupService {
   }
 
   changeMeetup(data: Partial<Meetup>) {
-    this.meetups = this.meetups.map((meetup) => {
-      if (meetup.id === data.id)
-        return {
-          ...meetup,
-          ...data,
-        };
-      return meetup;
-    });
+    this.meetups = this.sortMeetups(
+      this.meetups.map((meetup) => {
+        if (meetup.id === data.id)
+          return {
+            ...meetup,
+            ...data,
+          };
+        return meetup;
+      })
+    );
   }
 
   plural(

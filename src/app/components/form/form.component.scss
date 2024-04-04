@@ -65,6 +65,10 @@
         font-size: 18px;
         padding: 1px 22px;
         box-sizing: border-box;
+
+        &.ng-touched.ng-invalid {
+          border-color: var(--error-color);
+        }
       }
 
       .main-textarea {
