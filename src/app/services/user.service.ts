@@ -32,4 +32,8 @@ export class UserService {
   editUserRole(data: Partial<User>) {
     return this.http.post(`${this.baseUrl}/role`, data);
   }
+
+  deleteUser(id: number) {
+    return this.http.delete(`${this.baseUrl}/${id}`);
+  }
 }
