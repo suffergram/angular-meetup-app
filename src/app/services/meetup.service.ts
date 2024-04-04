@@ -90,6 +90,21 @@ export class MeetupService {
     this.meetups = this.meetups.filter((meetup) => meetup.id !== id);
   }
 
+  editMeetup(id: number, data: Partial<Meetup>) {
+    return this.http.put(`${this.baseUrl}/${id}`, data);
+  }
+
+  changeMeetup(data: Partial<Meetup>) {
+    this.meetups = this.meetups.map((meetup) => {
+      if (meetup.id === data.id)
+        return {
+          ...meetup,
+          ...data,
+        };
+      return meetup;
+    });
+  }
+
   plural(
     value: number,
     variants: { [index: string]: string } = {},

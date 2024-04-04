@@ -7,7 +7,7 @@
     <option [value]="UserRole.User">user</option>
   </select>
   <div class="user-controls">
-    <button class="user-delete">
+    <button type="button" class="user-delete" (click)="handleDelete()">
       <img src="assets/images/cross.png" />
     </button>
     <button type="submit" class="user-edit">

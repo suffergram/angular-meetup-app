@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { Meetup } from '../../interfaces/meetup';
 import { MeetupService } from '../../services/meetup.service';
 import { NgIf } from '@angular/common';
@@ -19,6 +19,9 @@ export class MeetupCardComponent implements OnInit {
     private meetupService: MeetupService,
     private authService: AuthService
   ) {}
+
+  @Output()
+  public editMeetup = new EventEmitter();
 
   @Input()
   public meetup!: Meetup;
@@ -73,6 +76,10 @@ export class MeetupCardComponent implements OnInit {
         this.meetupService.updateMeetup(data as Meetup);
       });
     }
+  }
+
+  onEditMeetup() {
+    this.editMeetup.emit();
   }
 
   onDeleteMeetup() {

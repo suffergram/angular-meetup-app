@@ -37,6 +37,8 @@ export class HomeComponent implements OnInit, OnDestroy, DoCheck {
 
   public users = [] as User[];
 
+  public meetup? = {} as Meetup;
+
   ngOnInit(): void {
     this.meetupService
       .fetchMeetups()
@@ -55,6 +57,10 @@ export class HomeComponent implements OnInit, OnDestroy, DoCheck {
           this.users = this.userService.getUsers();
         });
     }
+
+    this.router.events.subscribe(() => {
+      this.isModalOpen = false;
+    });
   }
 
   ngDoCheck(): void {
@@ -66,9 +72,10 @@ export class HomeComponent implements OnInit, OnDestroy, DoCheck {
     this.isModalOpen = false;
   }
 
-  handleOpenModal(title: string = '') {
+  handleOpenModal(title: string = '', meetup?: Meetup) {
     this.modalTitle = title;
     this.isModalOpen = true;
+    this.meetup = meetup;
     window.scrollTo({
       top: 0,
       behavior: 'smooth',
@@ -81,5 +88,15 @@ export class HomeComponent implements OnInit, OnDestroy, DoCheck {
       top: 0,
       behavior: 'smooth',
     });
+  }
+
+  deleteUser(id: number) {
+    this.userService.deleteUser(id).subscribe(() => {
+      this.users = this.users.filter((user) => user.id !== id);
+    });
+  }
+
+  handleEditMeetup(meetup: Meetup) {
+    this.handleOpenModal(FormTitle.Edit, meetup);
   }
 }
