@@ -38,6 +38,9 @@ p {
 
     &:disabled {
       color: var(--bold-color);
+      appearance: none;
+      -webkit-appearance: none;
+      -moz-appearance: none;
     }
   }
 

@@ -49,8 +49,19 @@
     <div class="meetup-controls">
       <button
         class="meetup-sub"
+        (click)="onEditMeetup()"
+        *ngIf="currentUser && this.currentUser.roles[0].name === UserRole.Admin"
+      >
+        Редактировать
+      </button>
+      <button
+        class="meetup-sub"
+        (click)="onEditMeetup()"
         *ngIf="
-          currentUser && meetup.createdBy === this.currentUser.id;
+          currentUser &&
+            meetup.createdBy === this.currentUser.id &&
+            currentUser &&
+            this.currentUser.roles[0].name === UserRole.User;
           else subBlock
         "
       >

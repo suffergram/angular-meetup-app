@@ -25,6 +25,9 @@ export class FormComponent implements OnInit {
   @Input()
   title!: string;
 
+  @Input()
+  meetup?: Meetup = undefined;
+
   @Output()
   public handleCloseModal = new EventEmitter();
 
@@ -33,7 +36,7 @@ export class FormComponent implements OnInit {
     date: FormControl<string | null>;
     time: FormControl<string | null>;
     location: FormControl<string | null>;
-    duration: FormControl<number | null>;
+    duration: FormControl<string | null>;
     description: FormControl<string | null>;
     target: FormControl<string | null>;
     req: FormControl<string | null>;
@@ -41,18 +44,27 @@ export class FormComponent implements OnInit {
     reason: FormControl<string | null>;
   }>;
 
-  initForm() {
+  initForm(meetup?: Meetup) {
+    const date =
+      meetup &&
+      new Date(meetup.time).toLocaleString('fr-CA', {
+        month: '2-digit',
+        day: '2-digit',
+        year: 'numeric',
+      });
+    const time = meetup && new Date(meetup.time).toLocaleTimeString('ru');
+
     this.modalForm = this.formBuilder.group({
-      title: ['', [Validators.required]],
-      date: ['', [Validators.required]],
-      time: ['', [Validators.required]],
-      location: ['', [Validators.required]],
-      description: [''],
-      duration: [0],
-      target: [''],
-      req: [''],
-      theme: [''],
-      reason: [''],
+      title: [meetup?.name ?? '', [Validators.required]],
+      date: [date ?? '', [Validators.required]],
+      time: [time ?? '', [Validators.required]],
+      location: [meetup?.location ?? '', [Validators.required]],
+      description: [meetup?.description ?? ''],
+      duration: [meetup?.duration.toString() ?? ''],
+      target: [meetup?.target_audience ?? ''],
+      req: [meetup?.need_to_know ?? ''],
+      theme: [meetup?.will_happen ?? ''],
+      reason: [meetup?.reason_to_come ?? ''],
     });
   }
 
@@ -69,7 +81,7 @@ export class FormComponent implements OnInit {
       name: controls['title'].value ?? '',
       description: controls['description'].value ?? '',
       time: resDate,
-      duration: controls['duration'].value ?? 0,
+      duration: Number(controls['duration'].value) ?? 0,
       location: controls['location'].value ?? '',
       target_audience: controls['target'].value ?? '',
       need_to_know: controls['req'].value ?? '',
@@ -77,17 +89,26 @@ export class FormComponent implements OnInit {
       reason_to_come: controls['reason'].value ?? '',
     };
 
-    this.meetupService.postMeetup(data).subscribe((data: Object) => {
-      this.meetupService.addMeetup(data as Meetup);
-      this.handleCloseModal.emit();
-    });
+    if (!this.meetup) {
+      this.meetupService.postMeetup(data).subscribe((data: Object) => {
+        this.meetupService.addMeetup(data as Meetup);
+        this.handleCloseModal.emit();
+      });
+    } else {
+      this.meetupService
+        .editMeetup(this.meetup.id, data)
+        .subscribe((data: Object) => {
+          this.meetupService.changeMeetup(data as Partial<Meetup>);
+          this.handleCloseModal.emit();
+        });
+    }
   }
 
   handleFormReset() {
-    this.initForm();
+    this.initForm(this.meetup);
   }
 
   ngOnInit(): void {
-    this.initForm();
+    this.initForm(this.meetup);
   }
 }

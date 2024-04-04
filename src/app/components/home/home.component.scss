@@ -12,6 +12,16 @@
   flex-direction: column;
   align-items: center;
 
+  .meetup-empty {
+    font-size: 18px;
+    color: var(--bold-color);
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
   .meetup-ul {
     align-self: stretch;
     list-style-type: none;

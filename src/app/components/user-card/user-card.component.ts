@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { User } from '../../interfaces/user';
 import { UserRole } from '../../enums/user-role';
 import {
@@ -24,6 +24,9 @@ export class UserCardComponent implements OnInit {
 
   @Input()
   user!: User;
+
+  @Output()
+  public deleteUser = new EventEmitter();
 
   public UserRole = UserRole;
 
@@ -89,5 +92,9 @@ export class UserCardComponent implements OnInit {
     }
 
     this.initForm(value);
+  }
+
+  handleDelete() {
+    this.deleteUser.emit(this.user.id);
   }
 }
