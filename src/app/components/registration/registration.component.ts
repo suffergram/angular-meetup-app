@@ -36,7 +36,7 @@ export class RegistrationComponent {
 
   initForm() {
     this.form = this.formBuilder.group({
-      email: ['', [Validators.required]],
+      email: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required]],
       fio: ['', [Validators.required]],
     });

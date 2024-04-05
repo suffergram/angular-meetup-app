@@ -12,11 +12,19 @@ import { UserRole } from '../../enums/user-role';
 import { UserService } from '../../services/user.service';
 import { User } from '../../interfaces/user';
 import { UserCardComponent } from '../user-card/user-card.component';
+import { SearchComponent } from '../search/search.component';
 
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [MeetupCardComponent, FormComponent, UserCardComponent, NgFor, NgIf],
+  imports: [
+    MeetupCardComponent,
+    FormComponent,
+    UserCardComponent,
+    SearchComponent,
+    NgFor,
+    NgIf,
+  ],
   templateUrl: './home.component.html',
   styleUrl: './home.component.scss',
 })
@@ -38,6 +46,8 @@ export class HomeComponent implements OnInit, OnDestroy, DoCheck {
   public isModalOpen: boolean = false;
   public modalTitle: string = '';
 
+  private lastRoute: string = '';
+
   ngOnInit(): void {
     this.meetupService
       .fetchMeetups()
@@ -55,6 +65,8 @@ export class HomeComponent implements OnInit, OnDestroy, DoCheck {
           this.userService.setUsers(data as User[]);
           this.users = this.userService.getUsers();
         });
+
+      this.lastRoute = this.router.url;
     }
 
     this.router.events.subscribe(() => {
@@ -63,7 +75,10 @@ export class HomeComponent implements OnInit, OnDestroy, DoCheck {
   }
 
   ngDoCheck(): void {
-    this.meetups = this.meetupService.getMeetups();
+    if (this.router.url !== this.lastRoute) {
+      this.meetups = this.meetupService.getMeetups();
+      this.lastRoute = this.router.url;
+    }
   }
 
   ngOnDestroy(): void {
@@ -98,5 +113,9 @@ export class HomeComponent implements OnInit, OnDestroy, DoCheck {
 
   handleEditMeetup(meetup: Meetup) {
     this.handleOpenModal(FormTitle.Edit, meetup);
+  }
+
+  handleSearchMeetups(search: string) {
+    this.meetups = this.meetupService.filterBySearch(search);
   }
 }

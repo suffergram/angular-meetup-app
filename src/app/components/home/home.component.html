@@ -1,3 +1,7 @@
+<app-search
+  *ngIf="this.router.url === '/' && !isModalOpen"
+  (handleSearchMeetups)="handleSearchMeetups($event)"
+></app-search>
 <section
   class="meetup-content"
   *ngIf="['/', '/my'].includes(this.router.url); else adminRoute"

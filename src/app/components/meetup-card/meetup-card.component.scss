@@ -116,6 +116,10 @@
         color: var(--bold-color);
         cursor: pointer;
         font-size: 18px;
+
+        &:focus {
+          outline: 2px solid var(--primary-color);
+        }
       }
 
       .meetup-unsub {
@@ -127,6 +131,10 @@
         color: var(--secondary-color);
         cursor: pointer;
         font-size: 18px;
+
+        &:focus {
+          outline: 2px solid var(--accent-color);
+        }
       }
 
       .meetup-toggle {
@@ -140,6 +148,10 @@
         display: flex;
         align-items: center;
         justify-content: center;
+
+        &:focus {
+          outline: 2px solid var(--primary-color);
+        }
 
         img {
           width: 29px;
@@ -162,6 +174,10 @@
         border-radius: 5px;
         background-color: transparent;
         cursor: pointer;
+
+        &:focus {
+          outline: 2px solid var(--primary-color);
+        }
 
         img {
           width: 14px;

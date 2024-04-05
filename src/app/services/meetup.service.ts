@@ -39,17 +39,27 @@ export class MeetupService {
   getMeetups(): Meetup[] {
     switch (this.router.url) {
       case '/my':
-        return this.filterMeetups();
+        return this.filterByUser();
       default:
         return this.meetups;
     }
   }
 
-  filterMeetups(): Meetup[] {
+  filterByUser(): Meetup[] {
     return this.meetups.filter(
       (meetup: Meetup) =>
         meetup.users.some((user) => user.id === this.authService.user.id) ||
         meetup.createdBy === this.authService.user.id
+    );
+  }
+
+  filterBySearch(search: string) {
+    return this.meetups.filter(
+      (meetup: Meetup) =>
+        meetup.description.toLowerCase().includes(search.toLowerCase()) ||
+        meetup.time.toLowerCase().includes(search.toLowerCase()) ||
+        meetup.owner.fio.toLowerCase().includes(search.toLowerCase()) ||
+        meetup.name.toLowerCase().includes(search.toLowerCase())
     );
   }
 

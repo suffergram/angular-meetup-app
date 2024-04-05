@@ -17,6 +17,7 @@ export class AuthService {
 
   tokenName: string = 'meetup_auth_token';
   baseUrl: string = `${environment.backendOrigin}/auth`;
+  currentToken: string | null = null;
 
   login(email: string, password: string) {
     return this.http
@@ -25,6 +26,7 @@ export class AuthService {
         map((res) => {
           if (res.token) {
             localStorage.setItem(this.tokenName, res.token);
+            this.currentToken = res.token;
           }
           return null;
         })
@@ -33,6 +35,7 @@ export class AuthService {
 
   logout() {
     localStorage.removeItem(this.tokenName);
+    this.currentToken = '';
     if (['', '/my', '/users'].includes(this.location.path()))
       this.routes.navigate(['login']);
   }
@@ -48,6 +51,7 @@ export class AuthService {
         map((res) => {
           if (res.token) {
             localStorage.setItem(this.tokenName, res.token);
+            this.currentToken = res.token;
           }
           return null;
         })
@@ -66,19 +70,10 @@ export class AuthService {
   }
 
   get token() {
-    return localStorage.getItem(this.tokenName);
-  }
-
-  register(data: Object) {
-    return this.http
-      .post<{ token: string }>(`${this.baseUrl}/registration`, data)
-      .pipe(
-        map((res) => {
-          if (res.token) {
-            localStorage.setItem(this.tokenName, res.token);
-          }
-          return null;
-        })
-      );
+    if (this.currentToken) return this.currentToken;
+    else {
+      this.currentToken = localStorage.getItem(this.tokenName);
+      return this.currentToken;
+    }
   }
 }

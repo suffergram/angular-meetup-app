@@ -8,6 +8,7 @@ import {
 } from '@angular/forms';
 import { MeetupService } from '../../services/meetup.service';
 import { Meetup } from '../../interfaces/meetup';
+import { locationValidator } from '../../validators/location.validator';
 
 @Component({
   selector: 'app-form',
@@ -58,7 +59,10 @@ export class FormComponent implements OnInit {
       title: [meetup?.name ?? '', [Validators.required]],
       date: [date ?? '', [Validators.required]],
       time: [time ?? '', [Validators.required]],
-      location: [meetup?.location ?? '', [Validators.required]],
+      location: [
+        meetup?.location ?? '',
+        [Validators.required, locationValidator()],
+      ],
       description: [meetup?.description ?? ''],
       duration: [meetup?.duration.toString() ?? ''],
       target: [meetup?.target_audience ?? ''],
