@@ -5,23 +5,50 @@ import { Meetup } from '../interfaces/meetup';
 import { SubInfo } from '../interfaces/sub-info';
 import { AuthService } from './auth.service';
 import { Router } from '@angular/router';
+import { BehaviorSubject } from 'rxjs';
+import { REQUEST_INTERVAL } from '../constants/request-interval';
 
 @Injectable({
   providedIn: 'root',
 })
 export class MeetupService {
+  private meetupsInterval: any;
+
   constructor(
     private http: HttpClient,
     private authService: AuthService,
     private router: Router
-  ) {}
+  ) {
+    this.authService.loggedInToken().subscribe((token) => {
+      if (token) {
+        this.fetchMeetups();
+        this.meetupsInterval = setInterval(() => {
+          this.fetchMeetups();
+        }, REQUEST_INTERVAL);
+      } else {
+        clearInterval(this.meetupsInterval);
+      }
+    });
+  }
 
   public meetups: Meetup[] = [];
+
+  private meetupsSubject = new BehaviorSubject<Meetup[]>([]);
 
   baseUrl: string = `${environment.backendOrigin}/meetup`;
 
   fetchMeetups() {
-    return this.http.get(this.baseUrl);
+    this.http
+      .get<Meetup[]>(this.baseUrl)
+      .subscribe(
+        (meetups) =>
+          meetups.length !== this.meetups.length &&
+          this.meetupsSubject.next(meetups)
+      );
+  }
+
+  loadMeetups() {
+    return this.meetupsSubject.asObservable();
   }
 
   setMeetups(data: Meetup[]) {
@@ -53,8 +80,8 @@ export class MeetupService {
     );
   }
 
-  filterBySearch(search: string) {
-    return this.meetups.filter(
+  filterBySearch(search: string, meetups: Meetup[]) {
+    return meetups.filter(
       (meetup: Meetup) =>
         meetup.description.toLowerCase().includes(search.toLowerCase()) ||
         meetup.time.toLowerCase().includes(search.toLowerCase()) ||
