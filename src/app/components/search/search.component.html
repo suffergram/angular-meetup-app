@@ -1,0 +1,11 @@
+<form [formGroup]="searchForm" (submit)="onSubmit()" class="search-form">
+  <input
+    formControlName="search"
+    type="text"
+    placeholder="Название, дата, пользователь"
+    class="search-input"
+  />
+  <button type="submit" class="search-button">
+    <img src="assets/images/search.png" />
+  </button>
+</form>

@@ -5,43 +5,88 @@ import { Meetup } from '../interfaces/meetup';
 import { SubInfo } from '../interfaces/sub-info';
 import { AuthService } from './auth.service';
 import { Router } from '@angular/router';
+import { BehaviorSubject } from 'rxjs';
+import { REQUEST_INTERVAL } from '../constants/request-interval';
 
 @Injectable({
   providedIn: 'root',
 })
 export class MeetupService {
+  private meetupsInterval: any;
+
   constructor(
     private http: HttpClient,
     private authService: AuthService,
     private router: Router
-  ) {}
+  ) {
+    this.authService.loggedInToken().subscribe((token) => {
+      if (token) {
+        this.fetchMeetups();
+        this.meetupsInterval = setInterval(() => {
+          this.fetchMeetups();
+        }, REQUEST_INTERVAL);
+      } else {
+        clearInterval(this.meetupsInterval);
+      }
+    });
+  }
 
   public meetups: Meetup[] = [];
+
+  private meetupsSubject = new BehaviorSubject<Meetup[]>([]);
 
   baseUrl: string = `${environment.backendOrigin}/meetup`;
 
   fetchMeetups() {
-    return this.http.get(this.baseUrl);
+    this.http
+      .get<Meetup[]>(this.baseUrl)
+      .subscribe(
+        (meetups) =>
+          meetups.length !== this.meetups.length &&
+          this.meetupsSubject.next(meetups)
+      );
+  }
+
+  loadMeetups() {
+    return this.meetupsSubject.asObservable();
   }
 
   setMeetups(data: Meetup[]) {
-    this.meetups = data;
+    this.meetups = this.sortMeetups(data);
+  }
+
+  sortMeetups(data: Meetup[]) {
+    return data.sort((a: Meetup, b: Meetup) => {
+      const aDate = new Date(a.time).valueOf();
+      const bDate = new Date(b.time).valueOf();
+      return aDate - bDate;
+    });
   }
 
   getMeetups(): Meetup[] {
     switch (this.router.url) {
       case '/my':
-        return this.filterMeetups();
+        return this.filterByUser();
       default:
         return this.meetups;
     }
   }
 
-  filterMeetups(): Meetup[] {
+  filterByUser(): Meetup[] {
     return this.meetups.filter(
       (meetup: Meetup) =>
         meetup.users.some((user) => user.id === this.authService.user.id) ||
         meetup.createdBy === this.authService.user.id
+    );
+  }
+
+  filterBySearch(search: string, meetups: Meetup[]) {
+    return meetups.filter(
+      (meetup: Meetup) =>
+        meetup.description.toLowerCase().includes(search.toLowerCase()) ||
+        meetup.time.toLowerCase().includes(search.toLowerCase()) ||
+        meetup.owner.fio.toLowerCase().includes(search.toLowerCase()) ||
+        meetup.name.toLowerCase().includes(search.toLowerCase())
     );
   }
 
@@ -69,7 +114,7 @@ export class MeetupService {
   }
 
   addMeetup(data: Meetup) {
-    this.meetups = [
+    this.meetups = this.sortMeetups([
       ...this.meetups,
       {
         ...data,
@@ -79,7 +124,7 @@ export class MeetupService {
           ...this.authService.user,
         },
       },
-    ];
+    ]);
   }
 
   deleteMeetup(id: number) {
@@ -95,14 +140,16 @@ export class MeetupService {
   }
 
   changeMeetup(data: Partial<Meetup>) {
-    this.meetups = this.meetups.map((meetup) => {
-      if (meetup.id === data.id)
-        return {
-          ...meetup,
-          ...data,
-        };
-      return meetup;
-    });
+    this.meetups = this.sortMeetups(
+      this.meetups.map((meetup) => {
+        if (meetup.id === data.id)
+          return {
+            ...meetup,
+            ...data,
+          };
+        return meetup;
+      })
+    );
   }
 
   plural(

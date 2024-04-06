@@ -2,21 +2,26 @@ import { HttpClient } from '@angular/common/http';
 import { Location } from '@angular/common';
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
-import { map } from 'rxjs';
+import { BehaviorSubject, Observable, map } from 'rxjs';
 import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AuthService {
+  private tokenSubject = new BehaviorSubject<boolean | null>(null);
+
   constructor(
     private http: HttpClient,
     private routes: Router,
     private location: Location
-  ) {}
+  ) {
+    this.tokenSubject.next(!!this.token);
+  }
 
   tokenName: string = 'meetup_auth_token';
   baseUrl: string = `${environment.backendOrigin}/auth`;
+  currentToken: string | null = null;
 
   login(email: string, password: string) {
     return this.http
@@ -25,6 +30,8 @@ export class AuthService {
         map((res) => {
           if (res.token) {
             localStorage.setItem(this.tokenName, res.token);
+            this.currentToken = res.token;
+            this.tokenSubject.next(!!this.currentToken);
           }
           return null;
         })
@@ -33,8 +40,29 @@ export class AuthService {
 
   logout() {
     localStorage.removeItem(this.tokenName);
+    this.currentToken = null;
+    this.tokenSubject.next(!!this.currentToken);
     if (['', '/my', '/users'].includes(this.location.path()))
       this.routes.navigate(['login']);
+  }
+
+  signup(email: string, password: string, fio: string) {
+    return this.http
+      .post<{ token: string }>(`${this.baseUrl}/registration`, {
+        email,
+        password,
+        fio,
+      })
+      .pipe(
+        map((res) => {
+          if (res.token) {
+            localStorage.setItem(this.tokenName, res.token);
+            this.currentToken = res.token;
+            this.tokenSubject.next(!!this.currentToken);
+          }
+          return null;
+        })
+      );
   }
 
   get user() {
@@ -49,19 +77,14 @@ export class AuthService {
   }
 
   get token() {
-    return localStorage.getItem(this.tokenName);
+    if (this.currentToken) return this.currentToken;
+    else {
+      this.currentToken = localStorage.getItem(this.tokenName);
+      return this.currentToken;
+    }
   }
 
-  register(data: Object) {
-    return this.http
-      .post<{ token: string }>(`${this.baseUrl}/registration`, data)
-      .pipe(
-        map((res) => {
-          if (res.token) {
-            localStorage.setItem(this.tokenName, res.token);
-          }
-          return null;
-        })
-      );
+  loggedInToken(): Observable<boolean | null> {
+    return this.tokenSubject.asObservable();
   }
 }

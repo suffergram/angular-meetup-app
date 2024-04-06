@@ -1,8 +1,16 @@
+<app-search
+  *ngIf="this.router.url === '/' && !isModalOpen"
+  (handleSearchMeetups)="handleSearchMeetups($event)"
+></app-search>
 <section
   class="meetup-content"
   *ngIf="['/', '/my'].includes(this.router.url); else adminRoute"
 >
-  <div class="meetup-empty" *ngIf="meetups.length === 0 && !isModalOpen">
+  <app-spinner *ngIf="isLoading"></app-spinner>
+  <div
+    class="meetup-empty"
+    *ngIf="!isLoading && meetups.length === 0 && !isModalOpen"
+  >
     Здесь пока пусто
   </div>
   <ul class="meetup-ul" *ngIf="!isModalOpen; else modalBlock">
@@ -30,7 +38,8 @@
 </button>
 <ng-template #adminRoute>
   <section class="admin-content">
-    <ul class="users-ul">
+    <app-spinner *ngIf="isLoading"></app-spinner>
+    <ul class="users-ul" *ngIf="!isLoading">
       <li *ngFor="let user of users">
         <app-user-card
           [user]="user"

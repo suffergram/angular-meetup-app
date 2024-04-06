@@ -2,13 +2,13 @@ import { Component, DoCheck } from '@angular/core';
 import { AuthService } from '../../services/auth.service';
 import { User } from '../../interfaces/user';
 import { NgIf } from '@angular/common';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { NavComponent } from '../nav/nav.component';
 
 @Component({
   selector: 'app-header',
   standalone: true,
-  imports: [NgIf, NavComponent],
+  imports: [NgIf, NavComponent, RouterLink],
   templateUrl: './header.component.html',
   styleUrl: './header.component.scss',
 })

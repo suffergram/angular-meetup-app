@@ -12,11 +12,21 @@ import { UserRole } from '../../enums/user-role';
 import { UserService } from '../../services/user.service';
 import { User } from '../../interfaces/user';
 import { UserCardComponent } from '../user-card/user-card.component';
+import { SearchComponent } from '../search/search.component';
+import { SpinnerComponent } from '../spinner/spinner.component';
 
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [MeetupCardComponent, FormComponent, UserCardComponent, NgFor, NgIf],
+  imports: [
+    MeetupCardComponent,
+    FormComponent,
+    UserCardComponent,
+    SearchComponent,
+    SpinnerComponent,
+    NgFor,
+    NgIf,
+  ],
   templateUrl: './home.component.html',
   styleUrl: './home.component.scss',
 })
@@ -29,32 +39,41 @@ export class HomeComponent implements OnInit, OnDestroy, DoCheck {
   ) {}
 
   private _destroyer = new Subject();
-  public meetups = [] as Meetup[];
   public FormTitle = FormTitle;
+
+  public meetups = [] as Meetup[];
+  public users = [] as User[];
+  public meetup? = {} as Meetup;
 
   public isModalOpen: boolean = false;
   public modalTitle: string = '';
 
-  public users = [] as User[];
+  private search: string = '';
 
-  public meetup? = {} as Meetup;
+  public isLoading: boolean = false;
 
   ngOnInit(): void {
     this.meetupService
-      .fetchMeetups()
+      .loadMeetups()
       .pipe(takeUntil(this._destroyer))
       .subscribe((data: Object) => {
-        this.meetupService.setMeetups(data as Meetup[]);
+        this.isLoading = true;
+        const meetups = data as Meetup[];
+        this.meetupService.setMeetups(meetups);
         this.meetups = this.meetupService.getMeetups();
+        this.isLoading = false;
       });
 
     if (this.authService.user.roles[0].name === UserRole.Admin) {
       this.userService
-        .fetchUsers()
+        .loadUsers()
         .pipe(takeUntil(this._destroyer))
         .subscribe((data: Object) => {
-          this.userService.setUsers(data as User[]);
+          this.isLoading = true;
+          const users = data as User[];
+          this.userService.setUsers(users);
           this.users = this.userService.getUsers();
+          this.isLoading = false;
         });
     }
 
@@ -64,26 +83,36 @@ export class HomeComponent implements OnInit, OnDestroy, DoCheck {
   }
 
   ngDoCheck(): void {
-    this.meetups = this.meetupService.getMeetups();
+    if (this.search !== '' && this.router.url === '/') {
+      this.meetups = this.meetupService.filterBySearch(
+        this.search,
+        this.meetupService.getMeetups()
+      );
+    } else {
+      this.meetups = this.meetupService.getMeetups();
+      this.search = '';
+    }
   }
 
   ngOnDestroy(): void {
     this._destroyer.complete();
     this.isModalOpen = false;
+    this.search = '';
   }
 
   handleOpenModal(title: string = '', meetup?: Meetup) {
     this.modalTitle = title;
     this.isModalOpen = true;
     this.meetup = meetup;
-    window.scrollTo({
-      top: 0,
-      behavior: 'smooth',
-    });
+    this.scrollPage();
   }
 
   handleCloseModal() {
     this.isModalOpen = false;
+    this.scrollPage();
+  }
+
+  scrollPage() {
     window.scrollTo({
       top: 0,
       behavior: 'smooth',
@@ -98,5 +127,9 @@ export class HomeComponent implements OnInit, OnDestroy, DoCheck {
 
   handleEditMeetup(meetup: Meetup) {
     this.handleOpenModal(FormTitle.Edit, meetup);
+  }
+
+  handleSearchMeetups(search: string) {
+    this.search = search;
   }
 }

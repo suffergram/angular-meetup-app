@@ -1,0 +1,12 @@
+:host {
+  flex: 1;
+  display: flex;
+  align-items: center;
+}
+
+.spinner-container {
+  .loading {
+    margin: 0;
+    font-size: 18px;
+  }
+}
