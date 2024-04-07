@@ -1,5 +1,5 @@
 <app-search
-  *ngIf="this.router.url === '/' && !isModalOpen"
+  *ngIf="this.router.url === '/' && !isFormOpen"
   (handleSearchMeetups)="handleSearchMeetups($event)"
 ></app-search>
 <section
@@ -9,11 +9,11 @@
   <app-spinner *ngIf="isLoading"></app-spinner>
   <div
     class="meetup-empty"
-    *ngIf="!isLoading && meetups.length === 0 && !isModalOpen"
+    *ngIf="!isLoading && meetups.length === 0 && !isFormOpen"
   >
     Здесь пока пусто
   </div>
-  <ul class="meetup-ul" *ngIf="!isModalOpen; else modalBlock">
+  <ul class="meetup-ul" *ngIf="!isFormOpen; else modalBlock">
     <li class="meetup-li" *ngFor="let meetup of meetups">
       <app-meetup-card
         [meetup]="meetup"
@@ -23,16 +23,16 @@
   </ul>
   <ng-template #modalBlock>
     <app-form
-      [title]="modalTitle"
-      (handleCloseModal)="handleCloseModal()"
+      [title]="formTitle"
+      (handleFormClose)="handleFormClose()"
       [meetup]="meetup"
     ></app-form>
   </ng-template>
 </section>
 <button
   class="meetup-create"
-  *ngIf="!isModalOpen && ['/', '/my'].includes(this.router.url)"
-  (click)="handleOpenModal(FormTitle.Create)"
+  *ngIf="!isFormOpen && ['/', '/my'].includes(this.router.url)"
+  (click)="handleFormOpen(FormTitle.Create)"
 >
   Создать митап
 </button>

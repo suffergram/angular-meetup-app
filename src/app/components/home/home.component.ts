@@ -14,6 +14,7 @@ import { User } from '../../interfaces/user';
 import { UserCardComponent } from '../user-card/user-card.component';
 import { SearchComponent } from '../search/search.component';
 import { SpinnerComponent } from '../spinner/spinner.component';
+import { ModalComponent } from '../modal/modal.component';
 
 @Component({
   selector: 'app-home',
@@ -24,6 +25,7 @@ import { SpinnerComponent } from '../spinner/spinner.component';
     UserCardComponent,
     SearchComponent,
     SpinnerComponent,
+    ModalComponent,
     NgFor,
     NgIf,
   ],
@@ -45,31 +47,30 @@ export class HomeComponent implements OnInit, OnDestroy, DoCheck {
   public users = [] as User[];
   public meetup? = {} as Meetup;
 
-  public isModalOpen: boolean = false;
-  public modalTitle: string = '';
+  public isLoading: boolean = false;
+  public isFormOpen: boolean = false;
 
+  public formTitle: string = '';
   private search: string = '';
 
-  public isLoading: boolean = false;
-
   ngOnInit(): void {
+    this.isLoading = true;
     this.meetupService
       .loadMeetups()
       .pipe(takeUntil(this._destroyer))
       .subscribe((data: Object) => {
-        this.isLoading = true;
         const meetups = data as Meetup[];
         this.meetupService.setMeetups(meetups);
         this.meetups = this.meetupService.getMeetups();
         this.isLoading = false;
       });
 
+    this.isLoading = true;
     if (this.authService.user.roles[0].name === UserRole.Admin) {
       this.userService
         .loadUsers()
         .pipe(takeUntil(this._destroyer))
         .subscribe((data: Object) => {
-          this.isLoading = true;
           const users = data as User[];
           this.userService.setUsers(users);
           this.users = this.userService.getUsers();
@@ -78,7 +79,7 @@ export class HomeComponent implements OnInit, OnDestroy, DoCheck {
     }
 
     this.router.events.subscribe(() => {
-      this.isModalOpen = false;
+      this.isFormOpen = false;
     });
   }
 
@@ -96,19 +97,19 @@ export class HomeComponent implements OnInit, OnDestroy, DoCheck {
 
   ngOnDestroy(): void {
     this._destroyer.complete();
-    this.isModalOpen = false;
+    this.isFormOpen = false;
     this.search = '';
   }
 
-  handleOpenModal(title: string = '', meetup?: Meetup) {
-    this.modalTitle = title;
-    this.isModalOpen = true;
+  handleFormOpen(title: string = '', meetup?: Meetup) {
+    this.formTitle = title;
+    this.isFormOpen = true;
     this.meetup = meetup;
     this.scrollPage();
   }
 
-  handleCloseModal() {
-    this.isModalOpen = false;
+  handleFormClose() {
+    this.isFormOpen = false;
     this.scrollPage();
   }
 
@@ -126,7 +127,7 @@ export class HomeComponent implements OnInit, OnDestroy, DoCheck {
   }
 
   handleEditMeetup(meetup: Meetup) {
-    this.handleOpenModal(FormTitle.Edit, meetup);
+    this.handleFormOpen(FormTitle.Edit, meetup);
   }
 
   handleSearchMeetups(search: string) {

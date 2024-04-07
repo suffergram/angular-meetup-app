@@ -6,11 +6,12 @@ import { AuthService } from '../../services/auth.service';
 import { SubInfo } from '../../interfaces/sub-info';
 import { User } from '../../interfaces/user';
 import { UserRole } from '../../enums/user-role';
+import { ModalComponent } from '../modal/modal.component';
 
 @Component({
   selector: 'app-meetup-card',
   standalone: true,
-  imports: [NgIf],
+  imports: [NgIf, ModalComponent],
   templateUrl: './meetup-card.component.html',
   styleUrl: './meetup-card.component.scss',
 })
@@ -35,6 +36,8 @@ export class MeetupCardComponent implements OnInit {
 
   public opened: boolean = false;
   public isActual: boolean = false;
+
+  public isModalOpen: boolean = false;
 
   ngOnInit(): void {
     this.subs = this.meetupService.plural(this.meetup.users.length, {
@@ -91,5 +94,13 @@ export class MeetupCardComponent implements OnInit {
     this.meetupService.deleteMeetup(this.meetup.id).subscribe(() => {
       this.meetupService.removeMeetup(this.meetup.id);
     });
+  }
+
+  handleModalOpen() {
+    this.isModalOpen = true;
+  }
+
+  handleModalClose() {
+    this.isModalOpen = false;
   }
 }

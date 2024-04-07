@@ -9,11 +9,13 @@ import {
 import { MeetupService } from '../../services/meetup.service';
 import { Meetup } from '../../interfaces/meetup';
 import { locationValidator } from '../../validators/location.validator';
+import { ModalComponent } from '../modal/modal.component';
+import { NgIf } from '@angular/common';
 
 @Component({
   selector: 'app-form',
   standalone: true,
-  imports: [ReactiveFormsModule],
+  imports: [ReactiveFormsModule, ModalComponent, NgIf],
   templateUrl: './form.component.html',
   styleUrl: './form.component.scss',
 })
@@ -30,7 +32,9 @@ export class FormComponent implements OnInit {
   meetup?: Meetup = undefined;
 
   @Output()
-  public handleCloseModal = new EventEmitter();
+  public handleFormClose = new EventEmitter();
+
+  public isModalOpen: boolean = false;
 
   modalForm!: FormGroup<{
     title: FormControl<string | null>;
@@ -96,14 +100,14 @@ export class FormComponent implements OnInit {
     if (!this.meetup) {
       this.meetupService.postMeetup(data).subscribe((data: Object) => {
         this.meetupService.addMeetup(data as Meetup);
-        this.handleCloseModal.emit();
+        this.handleFormClose.emit();
       });
     } else {
       this.meetupService
         .editMeetup(this.meetup.id, data)
         .subscribe((data: Object) => {
           this.meetupService.changeMeetup(data as Partial<Meetup>);
-          this.handleCloseModal.emit();
+          this.handleFormClose.emit();
         });
     }
   }
@@ -114,5 +118,13 @@ export class FormComponent implements OnInit {
 
   ngOnInit(): void {
     this.initForm(this.meetup);
+  }
+
+  handleModalOpen() {
+    this.isModalOpen = true;
+  }
+
+  handleModalClose() {
+    this.isModalOpen = false;
   }
 }
