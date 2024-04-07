@@ -1,5 +1,5 @@
 <div class="modal">
-  <button (click)="handleCloseModal.emit()" class="modal-close">╳</button>
+  <button (click)="handleFormClose.emit()" class="modal-close">╳</button>
 
   <form class="modal-form" [formGroup]="modalForm">
     <p class="modal-title">{{ title }}</p>
@@ -91,15 +91,16 @@
     <button class="modal-reset" type="reset" (click)="handleFormReset()">
       Удалить
     </button>
-    <button
-      class="modal-cancel"
-      type="button"
-      (click)="handleCloseModal.emit()"
-    >
+    <button class="modal-cancel" type="button" (click)="handleFormClose.emit()">
       Отмена
     </button>
-    <button class="modal-submit" type="submit" (click)="handleFormSubmit()">
+    <button class="modal-submit" type="submit" (click)="handleModalOpen()">
       Сохранить
     </button>
   </div>
 </div>
+<app-modal
+  *ngIf="isModalOpen"
+  (handleCloseModal)="handleModalClose()"
+  (action)="handleFormSubmit()"
+></app-modal>

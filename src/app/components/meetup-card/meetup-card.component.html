@@ -109,7 +109,7 @@
       </button>
       <button
         class="meetup-delete"
-        (click)="onDeleteMeetup()"
+        (click)="handleModalOpen()"
         *ngIf="
           currentUser &&
           (meetup.createdBy === this.currentUser.id ||
@@ -121,3 +121,8 @@
     </div>
   </div>
 </div>
+<app-modal
+  *ngIf="isModalOpen"
+  (handleCloseModal)="handleModalClose()"
+  (action)="onDeleteMeetup()"
+></app-modal>

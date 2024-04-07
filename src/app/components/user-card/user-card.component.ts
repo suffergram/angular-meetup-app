@@ -8,11 +8,13 @@ import {
   ReactiveFormsModule,
 } from '@angular/forms';
 import { UserService } from '../../services/user.service';
+import { ModalComponent } from '../modal/modal.component';
+import { NgIf } from '@angular/common';
 
 @Component({
   selector: 'app-user-card',
   standalone: true,
-  imports: [ReactiveFormsModule],
+  imports: [ReactiveFormsModule, ModalComponent, NgIf],
   templateUrl: './user-card.component.html',
   styleUrl: './user-card.component.scss',
 })
@@ -32,6 +34,8 @@ export class UserCardComponent implements OnInit {
 
   public disabled: boolean = true;
 
+  public isModalOpen: boolean = false;
+
   userForm!: FormGroup<{
     email: FormControl<string | null>;
     fio: FormControl<string | null>;
@@ -45,6 +49,10 @@ export class UserCardComponent implements OnInit {
       role: string | null;
     }>
   ) {
+    const userRole = this.user.roles.reduce((accumulator, role) => {
+      role.name === UserRole.Admin && (accumulator = role.name);
+      return accumulator;
+    }, UserRole.User);
     this.userForm = this.formBuilder.group({
       email: [
         { value: values?.email ?? this.user.email, disabled: this.disabled },
@@ -52,7 +60,7 @@ export class UserCardComponent implements OnInit {
       fio: [{ value: values?.fio ?? this.user.fio, disabled: this.disabled }],
       role: [
         {
-          value: values?.role ?? this.user.roles[0].name,
+          value: values?.role ?? userRole,
           disabled: this.disabled,
         },
       ],
@@ -96,5 +104,13 @@ export class UserCardComponent implements OnInit {
 
   handleDelete() {
     this.deleteUser.emit(this.user.id);
+  }
+
+  handleModalOpen() {
+    this.isModalOpen = true;
+  }
+
+  handleModalClose() {
+    this.isModalOpen = false;
   }
 }

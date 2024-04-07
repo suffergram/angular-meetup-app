@@ -5,7 +5,7 @@ import { Meetup } from '../interfaces/meetup';
 import { SubInfo } from '../interfaces/sub-info';
 import { AuthService } from './auth.service';
 import { Router } from '@angular/router';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, filter, map } from 'rxjs';
 import { REQUEST_INTERVAL } from '../constants/request-interval';
 
 @Injectable({
@@ -40,6 +40,7 @@ export class MeetupService {
   fetchMeetups() {
     this.http
       .get<Meetup[]>(this.baseUrl)
+      .pipe(map((meetups) => meetups.filter((meetup: Meetup) => meetup.owner)))
       .subscribe(
         (meetups) =>
           meetups.length !== this.meetups.length &&
